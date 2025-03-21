@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Loan EMI Calculator</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Advanced Loan EMI Calculator</h1>
+            <p>Calculate EMI and analyze repayment schedules for different types of loans. Visualize payment breakdown and amortization to make informed financial decisions.</p>
+        </header>
+        
+        <div class="loan-type-selector">
+            <button class="loan-type-btn active" data-type="home">Home Loan</button>
+            <button class="loan-type-btn" data-type="car">Vehicle Loan</button>
+            <button class="loan-type-btn" data-type="personal">Personal Loan</button>
+            <button class="loan-type-btn" data-type="education">Education Loan</button>
+            <button class="loan-type-btn" data-type="business">Business Loan</button>
+        </div>
+        
+        <div class="calc-container">
+            <div class="input-section">
+                <h2>Loan Details</h2>
+                <div class="input-group">
+                    <label for="loan-amount">Loan Amount (₹)</label>
+                    <input type="number" id="loan-amount" class="input-field" value="2500000">
+                    <div class="slider-container">
+                        <input type="range" min="100000" max="10000000" value="2500000" class="slider" id="amount-slider">
+                        <div class="range-labels">
+                            <span>1L</span>
+                            <span>1Cr</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="interest-rate">Interest Rate (% per annum)</label>
+                    <input type="number" id="interest-rate" class="input-field" value="8.5" step="0.1">
+                    <div class="slider-container">
+                        <input type="range" min="5" max="20" value="8.5" step="0.1" class="slider" id="interest-slider">
+                        <div class="range-labels">
+                            <span>5%</span>
+                            <span>20%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="loan-term">Loan Term (years)</label>
+                    <input type="number" id="loan-term" class="input-field" value="20">
+                    <div class="slider-container">
+                        <input type="range" min="1" max="30" value="20" class="slider" id="term-slider">
+                        <div class="range-labels">
+                            <span>1 yr</span>
+                            <span>30 yrs</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="payment-type">Payment Frequency</label>
+                    <select id="payment-type" class="input-field">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                
+                <button id="calculate-btn" class="calculate-btn">Calculate EMI</button>
+                
+                <div class="helpful-tips">
+                    <h3>Helpful Tips for Home Loans</h3>
+                    <ul class="tips-list">
+                        <li>Aim for a down payment of at least 20% to avoid PMI.</li>
+                        <li>EMIs should ideally not exceed 30% of your monthly income.</li>
+                        <li>Consider prepayment options to reduce overall interest.</li>
+                        <li>Check for processing fees and hidden charges.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <h2>Loan Summary</h2>
+                <div class="result-item">
+                    <div class="result-label"><span id="frequency">Monthly</span> EMI</div>
+                    <div class="result-value">₹21,758</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Total Amount Payable</div>
+                    <div class="result-value">₹52,21,920</div>
+                    <div class="result-subvalue">Principal: ₹25,00,000 | Interest: ₹27,21,920</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Loan to Value Ratio</div>
+                    <div class="result-value">80%</div>
+                </div>
+                
+                <div class="result-item">
+                    <div class="result-label">Total Interest Percentage</div>
+                    <div class="result-value">108.88%</div>
+                    <div class="result-subvalue">Total interest is 108.88% of your principal amount</div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="result-label">Payment Breakdown</div>
+                    <div class="progress-label">
+                        <span>Principal</span>
+                        <span>₹25,00,000 (47.9%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill fill-principal" style="width: 47.9%"></div>
+                    </div>
+                    
+                    <div class="progress-label">
+                        <span>Interest</span>
+                        <span>₹27,21,920 (52.1%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill fill-interest" style="width: 52.1%"></div>
+                    </div>
+
+                    <div id="breakdownChart" style="height: 250px"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h2>Loan Visualization</h2>
+            <div class="chart-tabs">
+                <button class="chart-tab active" data-chart="amortization">Amortization Chart</button>
+                <button class="chart-tab" data-chart="principal-interest">Principal vs Interest</button>
+                <button class="chart-tab" data-chart="balance">Outstanding Balance</button>
+            </div>
+            <div id="chartContainer" class="chart-wrapper"></div>
+            
+            <div class="summary-box">
+                <div class="summary-item">
+                    <div class="summary-label">First Year Interest</div>
+                    <div class="summary-value">₹2,08,505</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Years to Pay 50% Interest</div>
+                    <div class="summary-value">10.4 years</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Interest saved with 10% prepayment</div>
+                    <div class="summary-value">₹6,35,480</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h2>Payment Options Comparison</h2>
+            <p>See how different payment strategies affect your loan:</p>
+            <div id="comparisonChart" style="height: 300px;"></div>
+        </div>
+        
+        <div class="amortization-section">
+            <h2>Amortization Schedule</h2>
+            <div class="table-wrapper">
+                <table id="amortizationTable">
+                    <thead>
+                        <tr>
+                            <th>Payment No.</th>
+                            <th>Month/Year</th>
+                            <th>EMI Amount</th>
+                            <th>Principal</th>
+                            <th>Interest</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                <div id="paginationControls"></div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>This calculator provides estimates for planning purposes only and is not a financial advice.</p>
+            <p>© 2025 Advanced Loan EMI Calculator</p>
+        </footer>
+    </div>
+    <script src="assets/script.js"></script>
+</body>
+</html>
